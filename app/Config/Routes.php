@@ -21,7 +21,8 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
 
     // ================= ABSENSI USER =================
     $routes->get('absensi', 'User\Absensi::index');
-    $routes->get('absensi/masuk', 'User\Absensi::masuk');
+    $routes->get('absensi/create', 'User\Absensi::create');
+    $routes->post('absensi/store', 'User\Absensi::store');
     $routes->get('absensi/pulang/(:num)', 'User\Absensi::pulang/$1');
 
     // ================= CUTI USER =================
