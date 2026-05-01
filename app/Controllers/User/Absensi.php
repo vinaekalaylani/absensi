@@ -19,21 +19,34 @@ class Absensi extends BaseController
     }
 
     // =====================
-    // ABSEN MASUK
+    // ABSEN FORM (CREATE)
     // =====================
-    public function masuk()
+    public function create()
+    {
+        return view('user/absensi_create');
+    }
+
+    // =====================
+    // STORE ABSEN
+    // =====================
+    public function store()
     {
         $model = new AbsensiModel();
+
+        $status = $this->request->getPost('status');
+        if (!$status) {
+            $status = 'hadir';
+        }
 
         $model->insert([
             'nama_karyawan' => session()->get('username'),
             'tanggal'       => date('Y-m-d'),
             'jam_masuk'     => date('H:i:s'),
-            'status'        => 'hadir'
+            'status'        => $status
         ]);
 
         return redirect()->to('/absensi')
-            ->with('success', 'Berhasil Absen Masuk');
+            ->with('success', 'Berhasil Mengisi Absensi');
     }
 
     // =====================
