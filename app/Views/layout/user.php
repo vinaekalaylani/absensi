@@ -3,6 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>User Dashboard - Absensi</title>
 
     <!-- AdminLTE + Bootstrap -->
@@ -150,6 +151,61 @@
         
         /* Layout Tweaks */
         .navbar-white { background: var(--glass-bg) !important; backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border) !important; }
+    /* ================= MOBILE RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+    .main-sidebar {
+        width: 250px !important;
+    }
+
+    .content-wrapper {
+        padding: 10px !important;
+    }
+
+    .card-modern {
+        border-radius: 12px;
+        margin-bottom: 12px;
+    }
+
+    .btn-modern {
+        width: 100%;
+        margin-bottom: 10px;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .table-modern {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .navbar-nav .nav-item span {
+        font-size: 13px;
+    }
+
+    .brand-text {
+        font-size: 16px;
+    }
+
+    h1, h2, h3, h4 {
+        font-size: 20px !important;
+    }
+
+    .small-box h3 {
+        font-size: 20px;
+    }
+
+    .main-footer {
+        font-size: 12px;
+    }
+
+    .content-header h1 {
+        font-size: 22px;
+    }
+
+}
     </style>
 </head>
 
@@ -179,7 +235,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="<?= base_url('logout') ?>" class="btn btn-danger btn-sm">
+                <a href="<?= site_url('logout') ?>" class="btn btn-danger btn-sm">
                     Logout
                 </a>
             </li>

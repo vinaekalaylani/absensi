@@ -11,7 +11,10 @@ class Cuti extends BaseController
     {
         $model = new CutiModel();
 
-        $data['cuti'] = $model->findAll();
+        $data['cuti'] = $model
+            ->select('cuti.*, karyawan.nama as nama_karyawan')
+            ->join('karyawan', 'karyawan.id = cuti.id_karyawan')
+            ->findAll();
 
         return view('admin/cuti', $data);
     }
@@ -24,7 +27,8 @@ class Cuti extends BaseController
             'status' => 'disetujui'
         ]);
 
-        return redirect()->to('/admin/cuti')->with('success', 'Cuti disetujui');
+        return redirect()->to('/admin/cuti')
+            ->with('success', 'Cuti disetujui');
     }
 
     public function reject($id)
@@ -35,6 +39,7 @@ class Cuti extends BaseController
             'status' => 'ditolak'
         ]);
 
-        return redirect()->to('/admin/cuti')->with('success', 'Cuti ditolak');
+        return redirect()->to('/admin/cuti')
+            ->with('success', 'Cuti ditolak');
     }
 }

@@ -8,5 +8,11 @@ class KaryawanModel extends Model
 {
     protected $table = 'karyawan';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama', 'jabatan', 'telp'];
+
+    protected $allowedFields = [
+        'id_user',
+        'nama',
+        'jabatan',
+        'telp'
+    ];
 }

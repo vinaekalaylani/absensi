@@ -10,84 +10,107 @@ use App\Models\AbsensiModel;
 class Dashboard extends BaseController
 {
     public function index()
-{
-    $role = session()->get('role');
+    {
+        $role = session()->get('role');
 
-    // ===== ADMIN =====
-    if ($role == 'admin') {
+        $cutiModel     = new CutiModel();
+        $logModel      = new LogModel();
+        $karyawanModel = new KaryawanModel();
+        $absenModel    = new AbsensiModel();
 
-        $cuti = new CutiModel();
-        $log  = new LogModel();
-        $karyawan = new KaryawanModel();
-        $absen = new AbsensiModel();
+        // =====================================================
+        // 🔴 ADMIN DASHBOARD
+        // =====================================================
+        if ($role === 'admin') {
 
-        // ===== STATISTIK CUTI =====
-        $data['total_cuti'] = $cuti->countAll();
-        $data['pending']    = (new CutiModel())->where('status','pending')->countAllResults();
-        $data['disetujui']  = (new CutiModel())->where('status','disetujui')->countAllResults();
-        $data['ditolak']    = (new CutiModel())->where('status','ditolak')->countAllResults();
+            $data['total_cuti'] = $cutiModel->countAll();
+            $data['pending']    = $cutiModel->where('status', 'pending')->countAllResults();
+            $data['disetujui']  = $cutiModel->where('status', 'disetujui')->countAllResults();
+            $data['ditolak']    = $cutiModel->where('status', 'ditolak')->countAllResults();
 
-        // ===== KARYAWAN =====
-        $data['total_karyawan'] = $karyawan->countAll();
+            $data['total_karyawan'] = $karyawanModel->countAll();
 
-        // ===== ABSENSI HARI INI =====
-        $today = date('Y-m-d');
+            $today = date('Y-m-d');
 
-        $data['hadir'] = (new AbsensiModel())
-            ->where('tanggal', $today)
-            ->where('status','hadir')
-            ->countAllResults();
-
-        $data['tidak_hadir'] = (new AbsensiModel())
-            ->where('tanggal', $today)
-            ->where('status','tidak_hadir')
-            ->countAllResults();
-
-        // ===== GRAFIK =====
-        $bulan = [];
-        $jumlah = [];
-
-        for ($i=1; $i<=12; $i++) {
-            $bulan[] = date('M', mktime(0,0,0,$i,1));
-            $jumlah[] = (new CutiModel())
-                ->where('MONTH(tanggal_mulai)', $i)
+            $data['hadir'] = $absenModel
+                ->where('tanggal', $today)
+                ->where('status', 'hadir')
                 ->countAllResults();
+
+            $data['tidak_hadir'] = $absenModel
+                ->where('tanggal', $today)
+                ->where('status', 'tidak_hadir')
+                ->countAllResults();
+
+            // Grafik cuti per bulan
+            $bulan  = [];
+            $jumlah = [];
+
+            for ($i = 1; $i <= 12; $i++) {
+
+                $bulan[] = date('M', mktime(0, 0, 0, $i, 1));
+
+                $jumlah[] = (new CutiModel())
+                    ->where('MONTH(tanggal_mulai)', $i)
+                    ->countAllResults();
+            }
+
+            $data['bulan']  = json_encode($bulan);
+            $data['jumlah'] = json_encode($jumlah);
+
+            $data['log'] = $logModel
+                ->orderBy('id', 'DESC')
+                ->findAll(5);
+
+            return view('admin/dashboard', $data);
         }
 
-        $data['bulan'] = json_encode($bulan);
-        $data['jumlah'] = json_encode($jumlah);
+        // =====================================================
+        // 🟢 USER DASHBOARD (FIXED FULL)
+        // =====================================================
 
-        // ===== LOG =====
-        $data['log'] = $log->orderBy('id','DESC')->findAll(5);
+        $id_karyawan = session()->get('id_karyawan');
 
-        return view('admin/dashboard', $data);
-    }
+        if (!$id_karyawan) {
+            return redirect()->to('/login')
+                ->with('error', 'Silakan login terlebih dahulu');
+        }
 
-    // ===== USER =====
-    else {
-
-        $username = session()->get('username');
-
-        $cuti = new CutiModel();
-        $absen = new AbsensiModel();
-
-        $data['total_cuti'] = $cuti
-            ->where('nama_karyawan', $username)
+        // ================= CUTI =================
+        $data['total_cuti'] = $cutiModel
+            ->where('id_karyawan', $id_karyawan)
             ->countAllResults();
 
-        $data['pending'] = (new CutiModel())
-            ->where('nama_karyawan', $username)
-            ->where('status','pending')
+        $data['pending'] = $cutiModel
+            ->where('id_karyawan', $id_karyawan)
+            ->where('status', 'pending')
             ->countAllResults();
 
-        $data['hadir'] = $absen
-            ->where('nama_karyawan', $username)
-            ->where('tanggal', date('Y-m-d'))
-            ->where('status','hadir')
+        $data['disetujui'] = $cutiModel
+            ->where('id_karyawan', $id_karyawan)
+            ->where('status', 'disetujui')
+            ->countAllResults();
+
+        $data['ditolak'] = $cutiModel
+            ->where('id_karyawan', $id_karyawan)
+            ->where('status', 'ditolak')
+            ->countAllResults();
+
+        // ================= ABSENSI =================
+        $today = date('Y-m-d');
+
+        $data['hadir'] = $absenModel
+            ->where('id_karyawan', $id_karyawan)
+            ->where('tanggal', $today)
+            ->where('status', 'hadir')
+            ->countAllResults();
+
+        $data['tidak_hadir'] = $absenModel
+            ->where('id_karyawan', $id_karyawan)
+            ->where('tanggal', $today)
+            ->where('status', 'tidak_hadir')
             ->countAllResults();
 
         return view('user/dashboard', $data);
     }
 }
-}
-

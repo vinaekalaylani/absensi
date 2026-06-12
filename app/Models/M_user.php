@@ -8,5 +8,5 @@ class M_user extends Model
 {
     protected $table = 'user';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['username','password'];
+    protected $allowedFields = ['username','password','role'];
 }

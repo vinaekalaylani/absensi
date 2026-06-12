@@ -9,6 +9,15 @@
 
                 <form method="post" action="<?= base_url('karyawan/store') ?>">
                     <?= csrf_field() ?>
+                    <div class="form-group mb-4">
+                        <label>Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
 
                     <div class="form-group mb-4">
                         <label class="font-weight-semibold text-secondary">Nama Lengkap</label>

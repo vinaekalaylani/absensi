@@ -17,21 +17,18 @@ class LogModel extends Model
     ];
 
     // AUTO TIMESTAMP
-    protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-
-    // ❌ JANGAN PAKAI string kosong
-    protected $updatedField  = 'updated_at';
+    protected $useTimestamps = false;
 
     // =======================
-    // OOP METHOD (REUSABLE)
+    // TAMBAH LOG
     // =======================
     public function tambahLog($user, $aktivitas, $aksi)
     {
         return $this->insert([
             'user'      => $user,
             'aktivitas' => $aktivitas,
-            'aksi'      => $aksi
+            'aksi'      => $aksi,
+            'created_at' => date('Y-m-d H:i:s')
         ]);
     }
 }

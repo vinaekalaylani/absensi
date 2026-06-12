@@ -4,6 +4,7 @@ namespace App\Controllers\User;
 
 use App\Controllers\BaseController;
 use App\Models\CutiModel;
+use App\Models\KaryawanModel;
 
 class Cuti extends BaseController
 {
@@ -14,21 +15,18 @@ class Cuti extends BaseController
         $this->cutiModel = new CutiModel();
     }
 
-    // =====================
-    // READ - LIST CUTI
-    // =====================
     public function index()
     {
-        $username = session()->get('username');
+        $id_karyawan = session()->get('id_karyawan');
 
-        if (!$username) {
+        if (!$id_karyawan) {
             return redirect()->to('/login')
                 ->with('error', 'Silakan login terlebih dahulu');
         }
 
         $data = [
             'cuti' => $this->cutiModel
-                ->where('nama_karyawan', $username)
+                ->where('id_karyawan', $id_karyawan)
                 ->orderBy('id', 'DESC')
                 ->findAll()
         ];
@@ -36,34 +34,30 @@ class Cuti extends BaseController
         return view('user/cuti', $data);
     }
 
-    // =====================
-    // CREATE FORM
-    // =====================
     public function create()
     {
         return view('user/cuti_create');
     }
 
-    // =====================
-    // STORE DATA CUTI
-    // =====================
     public function store()
     {
-        $username = session()->get('username');
+        $id_karyawan = session()->get('id_karyawan');
 
-        if (!$username) {
+        if (!$id_karyawan) {
             return redirect()->to('/login')
-                ->with('error', 'Session tidak ditemukan');
+                ->with('error', 'Silakan login terlebih dahulu');
         }
 
-        // VALIDASI SEDERHANA
-        if (!$this->request->getPost('tanggal_mulai') || !$this->request->getPost('tanggal_selesai')) {
+        // VALIDASI FK (ANTI ERROR)
+        $karyawanModel = new KaryawanModel();
+
+        if (!$karyawanModel->find($id_karyawan)) {
             return redirect()->back()
-                ->with('error', 'Tanggal cuti wajib diisi');
+                ->with('error', 'Data karyawan tidak valid');
         }
 
         $this->cutiModel->insert([
-            'nama_karyawan'   => $username,
+            'id_karyawan'     => $id_karyawan,
             'tanggal_mulai'   => $this->request->getPost('tanggal_mulai'),
             'tanggal_selesai' => $this->request->getPost('tanggal_selesai'),
             'keterangan'      => $this->request->getPost('keterangan'),

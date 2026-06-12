@@ -107,7 +107,7 @@
         </div>
     <?php endif; ?>
 
-    <form action="<?= base_url('login/auth') ?>" method="post">
+    <form action="<?= site_url('login/auth') ?>" method="post">
         <div class="form-group mb-4">
             <label class="font-weight-medium text-secondary mb-2">Username</label>
             <input type="text" name="username" class="form-control form-control-modern" placeholder="Enter your username" required>

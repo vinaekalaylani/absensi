@@ -24,11 +24,9 @@
 
                     <div class="form-group mb-4">
                         <label class="font-weight-semibold text-secondary">Status Kehadiran</label>
-                        <select name="status" class="form-control form-control-modern" required>
-                            <option value="hadir">Hadir</option>
-                            <option value="sakit">Sakit</option>
-                            <option value="izin">Izin</option>
-                        </select>
+                        <input type="text" class="form-control form-control-modern"
+                        value="Hadir" readonly>
+                        <input type="hidden" name="status" value="hadir">
                     </div>
 
                     <div class="d-flex justify-content-between mt-5">

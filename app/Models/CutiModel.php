@@ -10,7 +10,7 @@ class CutiModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-        'nama_karyawan',
+        'id_karyawan',
         'tanggal_mulai',
         'tanggal_selesai',
         'keterangan',

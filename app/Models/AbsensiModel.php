@@ -10,7 +10,7 @@ class AbsensiModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-        'nama_karyawan',
+        'id_karyawan',
         'tanggal',
         'jam_masuk',
         'jam_pulang',
