@@ -39,11 +39,11 @@
                             </td>
 
                             <td>
-                                <?= $a['jam_keluar'] ?? '-' ?>
+                                <?= $a['jam_pulang'] ?? '-' ?>
                             </td>
 
                             <td class="text-center">
-                                <?php if (!empty($a['id']) && empty($a['jam_keluar']) && $a['status'] == 'hadir'): ?>
+                                <?php if (!empty($a['id']) && empty($a['jam_pulang']) && $a['status'] == 'hadir'): ?>
                                     <a href="<?= base_url('absensi/pulang/'.$a['id']) ?>"
                                        class="btn btn-sm btn-danger">
                                         Pulang

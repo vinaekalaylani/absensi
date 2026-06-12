@@ -20,7 +20,6 @@ class Absensi extends BaseController
         $karyawanModel = new KaryawanModel();
         $absenModel    = new AbsensiModel();
 
-        // ambil data karyawan dari user login
         $karyawan = $karyawanModel
             ->where('id_user', $idUser)
             ->first();
@@ -63,7 +62,7 @@ class Absensi extends BaseController
         ]);
     }
 
-    // ================= STORE ABSENSI (TEST MODE) =================
+    // ================= STORE ABSENSI =================
     public function store()
     {
         $idUser = session()->get('id_user');
@@ -84,13 +83,8 @@ class Absensi extends BaseController
                 ->with('error', 'Karyawan tidak ditemukan');
         }
 
-        $idKaryawan = $karyawan['id'];
-
-        // ================= TEST MODE: TIDAK ADA PEMBATASAN =================
-        // langsung insert tanpa cek absen sebelumnya
-
         $absenModel->insert([
-            'id_karyawan' => $idKaryawan,
+            'id_karyawan' => $karyawan['id'],
             'tanggal'     => date('Y-m-d'),
             'jam_masuk'   => date('H:i:s'),
             'jam_keluar'  => null,
@@ -98,16 +92,25 @@ class Absensi extends BaseController
         ]);
 
         return redirect()->to('/absensi')
-            ->with('success', 'Absen berhasil (TEST MODE)');
+            ->with('success', 'Absen berhasil');
     }
 
-    // ================= PULANG =================
+    // ================= PULANG (FIX FULL) =================
     public function pulang($id)
     {
-        $absenModel = new AbsensiModel();
+        $absenModel = new \App\Models\AbsensiModel();
 
+        // cek data dulu
+        $data = $absenModel->find($id);
+
+        if (!$data) {
+            return redirect()->to('/absensi')
+                ->with('error', 'Data absensi tidak ditemukan');
+        }
+
+        // update jam pulang
         $absenModel->update($id, [
-            'jam_keluar' => date('H:i:s')
+            'jam_pulang' => date('H:i:s')
         ]);
 
         return redirect()->to('/absensi')
